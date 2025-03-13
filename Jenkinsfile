@@ -1,43 +1,34 @@
 pipeline {
-    agent any
-    
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building the application...'
-                sh '''
-                    g++ -o PES1UG22AM123-1 err.cpp
-                    echo "Build completed successfully"
-                '''
-            }
-        }
-        
-        stage('Test') {
-            steps {
-                echo 'Testing the application...'
-                sh '''
-                    ./PES1UG22AM123-1
-                    echo "Testing completed successfully"
-                '''
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the application...'
-                sh '''
-                    echo "Deployment completed successfully"
-                '''
-            }
+agent any
+stages {
+    stage('Build') {
+        steps {
+            sh 'g++ -o PES1UG22AM123-1 hello.cpp'
         }
     }
     
-    post {
-        failure {
-            echo 'Pipeline failed!'
-        }
-        success {
-            echo 'Pipeline completed successfully!'
+    stage('Test') {
+        steps {
+            sh './PES1UG22AM123-1'
         }
     }
+    
+    stage('Deploy') {
+        steps {
+            // deployment code
+            sh 'mvn deploy'
+            echo 'deployment successful'
+        }
+    }
+}
+
+post {
+    always {
+        script {
+            if (currentBuild.result == "FAILURE") {
+                echo "Pipeline failed"
+            }
+        }
+    }
+}
 }
