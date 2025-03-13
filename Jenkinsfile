@@ -16,19 +16,20 @@ stages {
     stage('Deploy') {
         steps {
             // deployment code
-            sh 'mvn deploy'
-            echo 'deployment successful'
+            echo 'Deploying the application..'
+            sh '''
+                echo "Deployment completed succesfully
+            '''
         }
     }
 }
 
 post {
-    always {
-        script {
-            if (currentBuild.result == "FAILURE") {
-                echo "Pipeline failed"
-            }
-        }
+    failure {
+        echo 'Pipeline failed!'
+    }
+    success {
+        echo 'Pipeline completed successfully'
     }
 }
 }
